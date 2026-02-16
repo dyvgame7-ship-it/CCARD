@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buy gift Cards | Check any Gift Card validity - Gift Card Validity Checker</title>
+    <meta name="description" content="Buy gift Cards, check any Gift Card validity, check Gift Card balance target, check Gift Card balance amazon, check Gift Card balance apple" />
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+        }
+        .bg-header {
+            background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0841.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Style pour le sélecteur de langue */
+        .lang-selector {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 50;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0;
+            border: 1px solid #e5e7eb;
+        }
+        .lang-selector:hover .lang-dropdown {
+            display: block;
+        }
+        .lang-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-option:hover {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .lang-option img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        
+        /* Menu mobile style YouTube */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: white;
+            z-index: 101;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .mobile-menu.open {
+            left: 0;
+        }
+        .mobile-menu-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        .mobile-menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #374151;
+            font-weight: 500;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        .mobile-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+        .mobile-menu-item.active {
+            color: #2563eb;
+            font-weight: 700;
+            border-left: 4px solid #2563eb;
+        }
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        /* Style pour les cartes fournisseurs */
+        .supplier-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+        .supplier-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .supplier-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Overlay pour menu mobile -->
+    <div id="mobile-overlay" class="mobile-menu-overlay"></div>
+
+    <!-- Menu mobile style YouTube -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="flex items-center space-x-3">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image2.jpeg" alt="GCVC" class="h-10 w-auto">
+                <span class="font-bold text-gray-800" data-i18n="menu">Menu</span>
+            </div>
+        </div>
+        <nav>
+            <a href="/" class="mobile-menu-item">
+                <i class="fas fa-home w-6 mr-2"></i> <span data-i18n="gcvc">GCVC</span>
+            </a>
+            <a href="/buy-gift-cards" class="mobile-menu-item active">
+                <i class="fas fa-shopping-cart w-6 mr-2"></i> <span data-i18n="buy_giftcards">Buy giftcards</span>
+            </a>
+            <a href="/sell-gift-cards" class="mobile-menu-item">
+                <i class="fas fa-tag w-6 mr-2"></i> <span data-i18n="sell_giftcards">Sell GiftCards</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Header avec navigation et sélecteur de langue -->
+    <header class="bg-white/90 sticky top-0 z-50 shadow-sm">
+        <!-- Barre supérieure avec sélecteur de langue -->
+        <div class="bg-[#000991]/70 text-white py-1 px-4 text-sm flex justify-end">
+            <div class="lang-selector">
+                <button class="flex items-center space-x-1 text-white hover:text-gray-200 transition px-2">
+                    <i class="fas fa-globe"></i>
+                    <span id="current-lang">English</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div class="lang-dropdown">
+                    <!-- 9 langues avec drapeaux -->
+                    <div class="lang-option" data-lang="ar">
+                        <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" onerror="this.src='https://via.placeholder.com/20x15?text=SA'"> العربية
+                    </div>
+                    <div class="lang-option" data-lang="zh-CN">
+                        <img src="https://flagcdn.com/w20/cn.png" alt="Chinese" onerror="this.src='https://via.placeholder.com/20x15?text=CN'"> 中文
+                    </div>
+                    <div class="lang-option" data-lang="nl">
+                        <img src="https://flagcdn.com/w20/nl.png" alt="Dutch" onerror="this.src='https://via.placeholder.com/20x15?text=NL'"> Nederlands
+                    </div>
+                    <div class="lang-option" data-lang="en">
+                        <img src="https://flagcdn.com/w20/us.png" alt="English" onerror="this.src='https://via.placeholder.com/20x15?text=US'"> English
+                    </div>
+                    <div class="lang-option" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="French" onerror="this.src='https://via.placeholder.com/20x15?text=FR'"> Français
+                    </div>
+                    <div class="lang-option" data-lang="de">
+                        <img src="https://flagcdn.com/w20/de.png" alt="German" onerror="this.src='https://via.placeholder.com/20x15?text=DE'"> Deutsch
+                    </div>
+                    <div class="lang-option" data-lang="it">
+                        <img src="https://flagcdn.com/w20/it.png" alt="Italian" onerror="this.src='https://via.placeholder.com/20x15?text=IT'"> Italiano
+                    </div>
+                    <div class="lang-option" data-lang="no">
+                        <img src="https://flagcdn.com/w20/no.png" alt="Norway" onerror="this.src='https://via.placeholder.com/20x15?text=NO'"> Norsk
+                    </div>
+                    <div class="lang-option" data-lang="pl">
+                        <img src="https://flagcdn.com/w20/pl.png" alt="Poland" onerror="this.src='https://via.placeholder.com/20x15?text=PL'"> Polski
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Barre principale -->
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="/" class="block">
+                        <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image2.jpeg" alt="Gift Card Validity Checker" class="h-16 w-auto">
+                    </a>
+                </div>
+                
+                <!-- Navigation Desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" class="text-gray-700 hover:text-blue-600 font-medium"><span data-i18n="gcvc">GCVC</span></a>
+                    <a href="/buy-gift-cards" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1"><span data-i18n="buy_giftcards">Buy giftcards</span></a>
+                    <a href="/sell-gift-cards" class="text-gray-700 hover:text-blue-600 font-medium"><span data-i18n="sell_giftcards">Sell GiftCards</span></a>
+                </nav>
+                
+                <!-- Menu mobile button -->
+                <div class="flex items-center space-x-4">
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Bannière supérieure -->
+        <div class="w-full h-64 bg-cover bg-center relative" style="background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0841.jpg');">
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white uppercase text-center" data-i18n="buy_giftcards_title">BUY GIFT CARDS</h1>
+            </div>
+        </div>
+
+        <!-- Contenu principal -->
+        <div class="container mx-auto px-4 py-12 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Colonne gauche avec image -->
+                <div>
+                    <p class="text-xl font-bold text-blue-600 mb-4" data-i18n="purchase_from_verified">PURCHASE GIFT CARDS FROM VERIFIED SUPPLIERS</p>
+                    <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0823.jpg" alt="Gift Cards" class="rounded-lg shadow-xl w-full">
+                </div>
+                
+                <!-- Colonne droite avec liste de fournisseurs -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-6" data-i18n="trusted_suppliers">Trusted Gift Card Suppliers</h2>
+                    
+                    <!-- Dundle -->
+                    <div class="supplier-card mb-4">
+                        <div class="flex items-start gap-4">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAE5klEQVR4Ae2UVXDbWBSGJUMZPA2M05DK8FRmcNkTshxaXvtlmdF2mJwsM1OZmblhhjIzMzOds/cqlq0qkTLNczXzz7nB7zv/VcI8e6SPcSnPha6IzA/89Gc0vr4MQ99dDd0+3YA9nVugl2sL9E7K92QL0o9p6Nk7k7Yc6Z2cb2sm3MyFLY88GrLQih1emIt+toUYRCXeW41dP9lAYJuRQtRDZfJBXUIBHkrgZHsgE/2znNjheSqxSGgijEh0+3Q9aWKztwH5FFvwxiWTUKudbk7BkhAJh0dioe86PlmPvZybUQaU5SklQuVw0kLI8gh5E1AvsUpogl6H/P4V49hoUhUIWx51lcAgdBmBy0QUJBq+Ey5lAfJiXu2RlN9PuYGlEXYRKm4uPwd8+2a+4eW5Jn/7UlPImytN3IcrTd0/2WgiL5uQqOd/z7Cb3SjGZnaDdL4Y8/XVFyO+6qfSgtlGQXI4ncYFU8B/6kTs8KspXa3Jz8d8nu4c60THWAcKc4x3Ap0kVxwmB6fSRLRdLhG0wIx+/03ADr+MhVZfjMCs2SGqEsmTkzPSpqRh6pRUIfScZk6jUzwfzTBncE1eR8iyCKRw/6kToMPPY7HVlyNQmzYE89cYEGt1qhKZfOYPOXwOZluyUZxicizkYz77aAbfhISwOYG3/2UMtP5yJGpSh6D9966I1ToxqhJ5sXlTc+NykQQ8Ux51Cb9/x9tJ7Uhrp5vbKLxGB16BKl2TTRDINHesu4GA93PxuUdUJVp9OcymTR0M9j+EzRWiUW8iLm+qO84NFEojFyJfz2fUnr8WGKfKobQJ39QCVukV/7zIhobvItKuylvIi8/ztqEIxxq9TQ6VhsKbehc2t7VMXdsxFn+YlCxsL4IlOaoMp1Aaet/Sjb1ndfg2o2VqeacY2NI+Btd0tAoSIlhyHTwjf+6W6G33S7V4v0yHD8q0QCN+TCf9+GG5LkMJfJXjDad78FsPhllgu9GC5X4W3EwkVvgl4LcR6fX1x+ZeyY7PNjHy5+ware3COg1eWKdFMoEEaS6ul5w3KsOxH2+414/ferUvD6e783gwnMftQRYkTQgSy4wv0AaufpXQyL/lo9O1toMLNHhwIckCGhYOLGCRhJ6Fzx1dqklXg+Mg61YcyMO9flakEqeoBGlihzEGyv1icG1g4lV3grshHF2M7eCPLFb/Q8N4wmLNvyzU/MsAnbVTGTU4h4OtR4kAeiJIXOnL4+l6CdxhtBwpMfCNwB2M5bGTwSvpBPgdixXfMVjxPYuVP7BQ/j05k9R+y0xFB8PRnH2zFXfU3orb+ryBy+c57sIIUz+ytQj3BkjIddRL9OCP7uV4rlF7Aj8KTgaohGocLNz8UAenXm+Hu172wzJrZyia3APuDIlEOZwISSSsR8/2VoALAg5m62MnqwgGJwsUfuMjPZ56vS3sfqkTlFo7Y9EkRTj4zuRa+inDxSvgiMRR36ZPtvHIweLNj/Rw8vW2wuYN4bxUADxBHCyHqzwPPmP6PXYxV+vhLIKL9cJvfKR7YvPSib3xzpAIkGxLg74InzuiAFeRSCISDiIhbu70wXcReIkH/mBwTMPaB8dKztatBG5QQalLAHkpPbUjrV2E7zcNgoeDo0HcUtzeM9GTfBm8ec/dD8U/NwO3lTdwR03DOBzGq6eZ4GfP/4B5NV57+4UfAAAAAElFTkSuQmCC" alt="Dundle logo" class="supplier-logo">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">Dundle</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="dundle_desc">Buy Gift Cards Online, Prepaid Credit & More</p>
+                                <a href="https://dundle.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://dundle.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- mygiftcardsupply -->
+                    <div class="supplier-card mb-4">
+                        <div class="flex items-start gap-4">
+                            <img src="data:image/png;base64,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" alt="mygiftcardsupply logo" class="supplier-logo">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">mygiftcardsupply</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="mygiftcardsupply_desc">Buy Gift Cards, eGift Cards, Visa & Discount</p>
+                                <a href="https://www.mygiftcardsupply.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.mygiftcardsupply.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Giftcards.com -->
+                    <div class="supplier-card mb-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">G</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">Giftcards.com</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="giftcardscom_desc">Buy Gift Cards, Printable Gift Cards, Text & Email Delivery</p>
+                                <a href="https://www.giftcards.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.giftcards.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- eGifter -->
+                    <div class="supplier-card mb-4">
+                        <div class="flex items-start gap-4">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAE5UlEQVR4AaxXA7TsOhTNxxTzbdu2bds2p0kvvm3b9r+TtHO/bdu2beNp3t5tul6v23kva52VBuecnZODVBRpE3fcPLUroxM8ae50pe7yArODOLY5vujdDowm9qVevqLiRcWxx2J9XDR5j+sp866noib6/9CP4jfAPECFgm3flyquMidh/W+ukQD4KXHwbZOMtX6ceA0r9H2x27VetU0vCUUfcg5Ku8Wxj06I8R0YDwNd5EpTw/xnyXoY7zPWAHDS1VJl0SvZnFOrz4v5f9KTmgjfoxwZb5atA9BlXHMCs1FrWtuN7wZ6Pwi+HKc5mwo8GY2stMUL5YBdTCUWXHc277Y15sTaHwDx8CS166cCwPUpy1V6D+yddWjl+95RhcCXKLg3QdhzMLmXKAob62XzjtSbpHP12QH0A9BfAPEo6H/6BcbDLf+PYptogqFMvovdfIsT1hdwAr05vl/Nnfaxalv3DE5o5uOYwulsfqi3gbV+srxPemG8w6TtZspEZqhXtY77sWg2xxsUgK/MFtndikOjyQSbPN/lOGeN310V32QB/AVQT/ObzueoeON8WNI3GEVQ/mESnkM2mAgMt1lFw6DgHYTUCxDwQe4qfmRO8KQ+3FP6EKzfCBDPgu8TRgjW3mPU4PsNzHdBxk7i2MgRhRuSjKfi3SC4AUGPEJB1xl0c1ZgnMyOTDUOTfSXQi3lhY1VagAoB8gDsPxQyTvZCcyH66zC3ZyH9jjQLgvkYMJwFYVeg1xjfg9M8hZ6nYpz/zsjgPHkwBy+n0+Ud1/zZw6EDc0Sx2G+LVyHDgCTNOxB+JWgUwI0JQdlYA3Nvw3qXOUpvyCyK9VNzfLsUAjBJ7ZapspQ7ANHhvqV/0BnJkyjs3XA1APBFjmcdUaw1x8OdfddXsbkMAk9nKPL0du4CctDcXhgdhbnt8X0J/SjLohnZKCjWwPDgENfA+z5W7Ht5RewbTcaIya1fnaVkFi0APg39ZX7tthlLFKHonF4KR8KEDLURGL9Gr0/2BXptWOXz/F5fRm32EOczjaNPUrmtnsUavbpXGn4K9HJiaql3Yr3gPoYl5k8E/Zjb+7PfbmYSnTdMlOUPArdpuFjza11Lk3EQ+mhiaaZhSqbPMGz5XmAK9lVjq2pNL5mmYbMClYP+FqUa0cNs/Ss3n7BOsFqm8a1XImCMO8g62WF3TSGOTRNUak1zPK0iyjam034q4lcsuUyx9AsnjBWLDq3ADFlV0VIAOCx7QWHf97QW+L4vDQDMppcj/sMXEWr7malZ453dINqdQNO4v6PKwpNVRVY/5gsL/JsWLGCOyANwlAlZnm0GPMAJjMoSViWMFodzXmoT1Kegu23y0elj1nxbGgCfVLks9jydjiZlcYHQbRliOes8SjDor0EI/0h/oFJ7Fbfx6spb4ID6LDkFq3kyvhhAXqnUzCJ8B/SboplBpeEb4WsWrHxoilYa7xP0tHugmTvxARkvgfEzFFqOzJ+tvoofAvNurHD4vtANE6drliZphjNSWvkvONnruHUWmPQn9lnaLU3IKXy8lAcQmDmSJ7U0V/GXbBAl/wLkFwD4AvpuWgt0JMPUVfW1sozZoh9Et3qyviL6M0EGSs6AHwR8wPpt8dITqdunK5XnSzUI5guoZfSjRyngyFojD/I1Pe3EbKDmr4qjlfkAt6b2XoFcZ7EAAAAASUVORK5CYII=" alt="eGifter logo" class="supplier-logo">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">eGifter</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="egifter_desc">Online Gift Cards, Visa & Group Gifting</p>
+                                <a href="https://www.egifter.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.egifter.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Buygiftcards.com -->
+                    <div class="supplier-card">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">B</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">Buygiftcards.com</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="buygiftcards_desc">Buy Gift Cards | Printable Gift Cards | Text & Email Delivery</p>
+                                <a href="https://www.buygiftcards.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.buygiftcards.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">admin@giftcardvaliditychecker.com | 38 place Jean Jaurès, rdc gauche rdc gauche 10000 Troyes | 910 E Main St, Richmond, VA 23219 USA</p>
+            <p class="text-gray-400">Copyright 2019© <strong>GCVC</strong></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript avec le dictionnaire de traduction complet -->
+    <script>
+        (function() {
+            // ==================== DICTIONNAIRE DE TRADUCTION ====================
+            const translations = {
+                en: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Buy giftcards",
+                    sell_giftcards: "Sell GiftCards",
+                    buy_giftcards_title: "BUY GIFT CARDS",
+                    purchase_from_verified: "PURCHASE GIFT CARDS FROM VERIFIED SUPPLIERS",
+                    trusted_suppliers: "Trusted Gift Card Suppliers",
+                    dundle_desc: "Buy Gift Cards Online, Prepaid Credit & More",
+                    mygiftcardsupply_desc: "Buy Gift Cards, eGift Cards, Visa & Discount",
+                    giftcardscom_desc: "Buy Gift Cards, Printable Gift Cards, Text & Email Delivery",
+                    egifter_desc: "Online Gift Cards, Visa & Group Gifting",
+                    buygiftcards_desc: "Buy Gift Cards | Printable Gift Cards | Text & Email Delivery",
+                    warning: "Avertissement : N'utilisez jamais ce type d'outil avec de vraies cartes cadeaux. Utilisez toujours le site officiel."
+                },
+                fr: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Acheter des cartes",
+                    sell_giftcards: "Vendre des cartes",
+                    buy_giftcards_title: "ACHETER DES CARTES CADEAUX",
+                    purchase_from_verified: "ACHETEZ DES CARTES CADEAUX AUPRÈS DE FOURNISSEURS VÉRIFIÉS",
+                    trusted_suppliers: "Fournisseurs de cartes cadeaux de confiance",
+                    dundle_desc: "Achetez des cartes cadeaux en ligne, crédit prépayé et plus",
+                    mygiftcardsupply_desc: "Achetez des cartes cadeaux, eGift Cards, Visa et remises",
+                    giftcardscom_desc: "Achetez des cartes cadeaux imprimables, livraison par texto et e-mail",
+                    egifter_desc: "Cartes cadeaux en ligne, Visa et cadeaux de groupe",
+                    buygiftcards_desc: "Achetez des cartes cadeaux imprimables, livraison par texto et e-mail",
+                    warning: "Warning: Never use this type of tool with real gift cards. Always use the official site."
+                },
+                de: {
+                    menu: "Menü",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Geschenkkarten kaufen",
+                    sell_giftcards: "Geschenkkarten verkaufen",
+                    buy_giftcards_title: "GESCHENKKARTEN KAUFEN",
+                    purchase_from_verified: "KAUFEN SIE GESCHENKKARTEN VON VERIFIZIERTEN ANBIETERN",
+                    trusted_suppliers: "Vertrauenswürdige Geschenkkartenanbieter",
+                    dundle_desc: "Kaufen Sie Geschenkkarten online, Prepaid-Guthaben und mehr",
+                    mygiftcardsupply_desc: "Kaufen Sie Geschenkkarten, eGift Cards, Visa und Rabatte",
+                    giftcardscom_desc: "Kaufen Sie druckbare Geschenkkarten, Lieferung per SMS und E-Mail",
+                    egifter_desc: "Online-Geschenkkarten, Visa und Gruppengeschenke",
+                    buygiftcards_desc: "Kaufen Sie druckbare Geschenkkarten, Lieferung per SMS und E-Mail",
+                    warning: "Warnung: Verwenden Sie diese Art von Tool niemals mit echten Geschenkkarten. Verwenden Sie immer die offizielle Website."
+                },
+                it: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Acquista carte regalo",
+                    sell_giftcards: "Vendi carte regalo",
+                    buy_giftcards_title: "ACQUISTA CARTE REGALO",
+                    purchase_from_verified: "ACQUISTA CARTE REGALO DA FORNITORI VERIFICATI",
+                    trusted_suppliers: "Fornitori di carte regalo affidabili",
+                    dundle_desc: "Acquista carte regalo online, credito prepagato e altro",
+                    mygiftcardsupply_desc: "Acquista carte regalo, eGift Cards, Visa e sconti",
+                    giftcardscom_desc: "Acquista carte regalo stampabili, consegna via SMS ed e-mail",
+                    egifter_desc: "Carte regalo online, Visa e regali di gruppo",
+                    buygiftcards_desc: "Acquista carte regalo stampabili, consegna via SMS ed e-mail",
+                    warning: "Attenzione: non utilizzare mai questo tipo di strumento con carte regalo reali. Utilizzare sempre il sito ufficiale."
+                },
+                nl: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Cadeaubonnen kopen",
+                    sell_giftcards: "Cadeaubonnen verkopen",
+                    buy_giftcards_title: "CADEAUBONNEN KOPEN",
+                    purchase_from_verified: "KOOP CADEAUBONNEN VAN GECONTROLEERDE LEVERANCIERS",
+                    trusted_suppliers: "Betrouwbare cadeaubonleveranciers",
+                    dundle_desc: "Koop online cadeaubonnen, prepaidtegoed en meer",
+                    mygiftcardsupply_desc: "Koop cadeaubonnen, eGift Cards, Visa en kortingen",
+                    giftcardscom_desc: "Koop afdrukbare cadeaubonnen, bezorging via sms en e-mail",
+                    egifter_desc: "Online cadeaubonnen, Visa en groepscadeaus",
+                    buygiftcards_desc: "Koop afdrukbare cadeaubonnen, bezorging via sms en e-mail",
+                    warning: "Waarschuwing: Gebruik dit type hulpmiddel nooit met echte cadeaubonnen. Gebruik altijd de officiële site."
+                },
+                no: {
+                    menu: "Meny",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Kjøp gavekort",
+                    sell_giftcards: "Selg gavekort",
+                    buy_giftcards_title: "KJØP GAVEKORT",
+                    purchase_from_verified: "KJØP GAVEKORT FRA VERIFISERTE LEVERANDØRER",
+                    trusted_suppliers: "Pålitelige gavekortleverandører",
+                    dundle_desc: "Kjøp gavekort på nettet, forhåndsbetalt kreditt og mer",
+                    mygiftcardsupply_desc: "Kjøp gavekort, eGift Cards, Visa og rabatter",
+                    giftcardscom_desc: "Kjøp utskrivbare gavekort, levering via SMS og e-post",
+                    egifter_desc: "Nettbaserte gavekort, Visa og gruppegaver",
+                    buygiftcards_desc: "Kjøp utskrivbare gavekort, levering via SMS og e-post",
+                    warning: "Advarsel: Bruk aldri denne typen verktøy med ekte gavekort. Bruk alltid den offisielle nettsiden."
+                },
+                pl: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Kup karty podarunkowe",
+                    sell_giftcards: "Sprzedaj karty podarunkowe",
+                    buy_giftcards_title: "KUP KARTY PODARUNKOWE",
+                    purchase_from_verified: "KUPUJ KARTY PODARUNKOWE OD ZWERYFIKOWANYCH DOSTAWCÓW",
+                    trusted_suppliers: "Zaufani dostawcy kart podarunkowych",
+                    dundle_desc: "Kupuj karty podarunkowe online, przedpłacony kredyt i więcej",
+                    mygiftcardsupply_desc: "Kupuj karty podarunkowe, eGift Cards, Visa i rabaty",
+                    giftcardscom_desc: "Kupuj karty podarunkowe do wydrukowania, dostawa SMS-em i e-mailem",
+                    egifter_desc: "Karty podarunkowe online, Visa i prezenty grupowe",
+                    buygiftcards_desc: "Kupuj karty podarunkowe do wydrukowania, dostawa SMS-em i e-mailem",
+                    warning: "Ostrzeżenie: Nigdy nie używaj tego typu narzędzia z prawdziwymi kartami podarunkowymi. Zawsze korzystaj z oficjalnej strony."
+                },
+                ar: {
+                    menu: "القائمة",
+                    gcvc: "GCVC",
+                    buy_giftcards: "شراء بطاقات الهدايا",
+                    sell_giftcards: "بيع بطاقات الهدايا",
+                    buy_giftcards_title: "شراء بطاقات الهدايا",
+                    purchase_from_verified: "شراء بطاقات الهدايا من موردين موثوقين",
+                    trusted_suppliers: "موردي بطاقات الهدايا الموثوقين",
+                    dundle_desc: "اشترِ بطاقات الهدايا عبر الإنترنت ورصيد مدفوع مسبقًا والمزيد",
+                    mygiftcardsupply_desc: "اشترِ بطاقات الهدايا وبطاقات الهدايا الإلكترونية وفيزا وخصومات",
+                    giftcardscom_desc: "اشترِ بطاقات هدايا قابلة للطباعة وتسليم عبر الرسائل النصية والبريد الإلكتروني",
+                    egifter_desc: "بطاقات هدايا عبر الإنترنت وفيزا وهدايا جماعية",
+                    buygiftcards_desc: "اشترِ بطاقات هدايا قابلة للطباعة وتسليم عبر الرسائل النصية والبريد الإلكتروني",
+                    warning: "تحذير: لا تستخدم أبدًا هذا النوع من الأدوات مع بطاقات الهدايا الحقيقية. استخدم دائمًا الموقع الرسمي."
+                },
+                "zh-CN": {
+                    menu: "菜单",
+                    gcvc: "GCVC",
+                    buy_giftcards: "购买礼品卡",
+                    sell_giftcards: "出售礼品卡",
+                    buy_giftcards_title: "购买礼品卡",
+                    purchase_from_verified: "从经过验证的供应商处购买礼品卡",
+                    trusted_suppliers: "值得信赖的礼品卡供应商",
+                    dundle_desc: "在线购买礼品卡、预付信用卡等",
+                    mygiftcardsupply_desc: "购买礼品卡、电子礼品卡、Visa卡和折扣卡",
+                    giftcardscom_desc: "购买可打印礼品卡，通过短信和电子邮件发送",
+                    egifter_desc: "在线礼品卡、Visa卡和团体礼品",
+                    buygiftcards_desc: "购买可打印礼品卡，通过短信和电子邮件发送",
+                    warning: "警告：切勿将此类工具与真实礼品卡一起使用。请始终使用官方网站。"
+                }
+            };
+
+            // ==================== FONCTION DE CHANGEMENT DE LANGUE ====================
+            function changeLanguage(lang) {
+                // Vérifier si la langue existe dans le dictionnaire
+                if (!translations[lang]) {
+                    console.warn(`Langue ${lang} non disponible, utilisation de l'anglais par défaut`);
+                    lang = 'en';
+                }
+                
+                // Récupérer tous les éléments avec l'attribut data-i18n
+                const elements = document.querySelectorAll('[data-i18n]');
+                
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    
+                    // Si la traduction existe pour cette clé
+                    if (translations[lang] && translations[lang][key]) {
+                        element.textContent = translations[lang][key];
+                    } else {
+                        console.warn(`Traduction manquante pour la clé: ${key} en langue: ${lang}`);
+                    }
+                });
+                
+                // Mettre à jour l'affichage du bouton de langue
+                const currentLangSpan = document.getElementById('current-lang');
+                if (currentLangSpan) {
+                    const langNames = {
+                        en: 'English',
+                        fr: 'Français',
+                        de: 'Deutsch',
+                        it: 'Italiano',
+                        nl: 'Nederlands',
+                        no: 'Norsk',
+                        pl: 'Polski',
+                        ar: 'العربية',
+                        'zh-CN': '中文'
+                    };
+                    currentLangSpan.textContent = langNames[lang] || 'English';
+                }
+                
+                // Sauvegarder la préférence de langue
+                localStorage.setItem('preferredLanguage', lang);
+                
+                // Gérer la direction du texte pour l'arabe
+                if (lang === 'ar') {
+                    document.documentElement.dir = 'rtl';
+                } else {
+                    document.documentElement.dir = 'ltr';
+                }
+            }
+
+            // ==================== INITIALISATION ====================
+            
+            // Charger la langue préférée au démarrage
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            changeLanguage(savedLang);
+            
+            // Connecter les options de langue
+            const langOptions = document.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // Menu mobile style YouTube
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileOverlay = document.getElementById('mobile-overlay');
+            const body = document.body;
+            
+            function openMenu() {
+                mobileMenu.classList.add('open');
+                mobileOverlay.classList.add('active');
+                body.classList.add('menu-open');
+            }
+            
+            function closeMenu() {
+                mobileMenu.classList.remove('open');
+                mobileOverlay.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+            
+            if (menuBtn && mobileMenu && mobileOverlay) {
+                menuBtn.addEventListener('click', openMenu);
+                mobileOverlay.addEventListener('click', closeMenu);
+                
+                // Fermer avec la touche Echap
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                        closeMenu();
+                    }
+                });
+            }
+        })();
+    </script>
+
+</body>
+</html>

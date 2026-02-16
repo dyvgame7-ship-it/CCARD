@@ -1,18 +1,1074 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validateur de Cartes cadeaux</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gift Card validity check/ Check Gift Card balance - Gift Card Validity Checker</title>
+    <meta name="description" content="Gift Card validity Check, Verify Gift Card validity, Verify Gift Card balance, Check Gift Card balance , Gift Card checker - GCVC" />
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+        }
+        .bg-header {
+            background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0831-1400x429.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+        }
+        .bg-banner {
+            background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0824.jpg');
+            background-size: cover;
+            background-position: 48% 0%;
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Style pour le sélecteur de langue */
+        .lang-selector {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 50;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0;
+            border: 1px solid #e5e7eb;
+        }
+        .lang-selector:hover .lang-dropdown {
+            display: block;
+        }
+        .lang-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-option:hover {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .lang-option img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        
+        /* Menu mobile style YouTube */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: white;
+            z-index: 101;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .mobile-menu.open {
+            left: 0;
+        }
+        .mobile-menu-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        .mobile-menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #374151;
+            font-weight: 500;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        .mobile-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+        .mobile-menu-item.active {
+            color: #2563eb;
+            font-weight: 700;
+            border-left: 4px solid #2563eb;
+        }
+        body.menu-open {
+            overflow: hidden;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <h1>Validateur de Cartes cadeaux</h1>
-        <p>Veuillez entrez le code de votre carte cadeau pour vérifier sa validité.</p>
-        <form action="/validate" method="post">
-            <input type="text" name="gift_card_code" placeholder="Code de la carte cadeau" required>
-            <button type="submit">Valider</button>
-        </form>
+<body class="bg-gray-50">
+
+    <!-- Overlay pour menu mobile -->
+    <div id="mobile-overlay" class="mobile-menu-overlay"></div>
+
+    <!-- Menu mobile style YouTube -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="flex items-center space-x-3">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image2.jpeg" alt="GCVC" class="h-10 w-auto">
+                <span class="font-bold text-gray-800" data-i18n="menu">Menu</span>
+            </div>
+        </div>
+        <nav>
+            <a href="/" class="mobile-menu-item active">
+                <i class="fas fa-home w-6 mr-2"></i> <span data-i18n="gcvc">GCVC</span>
+            </a>
+            <a href="/buy-gift-cards" class="mobile-menu-item">
+                <i class="fas fa-shopping-cart w-6 mr-2"></i> <span data-i18n="buy_giftcards">Buy giftcards</span>
+            </a>
+            <a href="/sell-gift-cards" class="mobile-menu-item">
+                <i class="fas fa-tag w-6 mr-2"></i> <span data-i18n="sell_giftcards">Sell GiftCards</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Header avec navigation et sélecteur de langue -->
+    <header class="bg-white/90 sticky top-0 z-50 shadow-sm">
+        <!-- Barre supérieure avec sélecteur de langue -->
+        <div class="bg-[#000991]/70 text-white py-1 px-4 text-sm flex justify-end">
+            <div class="lang-selector">
+                <button class="flex items-center space-x-1 text-white hover:text-gray-200 transition px-2">
+                    <i class="fas fa-globe"></i>
+                    <span id="current-lang">English</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div class="lang-dropdown">
+                    <!-- 9 langues avec drapeaux -->
+                    <div class="lang-option" data-lang="ar">
+                        <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" onerror="this.src='https://via.placeholder.com/20x15?text=SA'"> العربية
+                    </div>
+                    <div class="lang-option" data-lang="zh-CN">
+                        <img src="https://flagcdn.com/w20/cn.png" alt="Chinese" onerror="this.src='https://via.placeholder.com/20x15?text=CN'"> 中文
+                    </div>
+                    <div class="lang-option" data-lang="nl">
+                        <img src="https://flagcdn.com/w20/nl.png" alt="Dutch" onerror="this.src='https://via.placeholder.com/20x15?text=NL'"> Nederlands
+                    </div>
+                    <div class="lang-option" data-lang="en">
+                        <img src="https://flagcdn.com/w20/us.png" alt="English" onerror="this.src='https://via.placeholder.com/20x15?text=US'"> English
+                    </div>
+                    <div class="lang-option" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="French" onerror="this.src='https://via.placeholder.com/20x15?text=FR'"> Français
+                    </div>
+                    <div class="lang-option" data-lang="de">
+                        <img src="https://flagcdn.com/w20/de.png" alt="German" onerror="this.src='https://via.placeholder.com/20x15?text=DE'"> Deutsch
+                    </div>
+                    <div class="lang-option" data-lang="it">
+                        <img src="https://flagcdn.com/w20/it.png" alt="Italian" onerror="this.src='https://via.placeholder.com/20x15?text=IT'"> Italiano
+                    </div>
+                    <div class="lang-option" data-lang="no">
+                        <img src="https://flagcdn.com/w20/no.png" alt="Norway" onerror="this.src='https://via.placeholder.com/20x15?text=NO'"> Norsk
+                    </div>
+                    <div class="lang-option" data-lang="pl">
+                        <img src="https://flagcdn.com/w20/pl.png" alt="Poland" onerror="this.src='https://via.placeholder.com/20x15?text=PL'"> Polski
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Barre principale -->
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="/" class="block">
+                        <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image2.jpeg" alt="Gift Card Validity Checker" class="h-16 w-auto">
+                    </a>
+                </div>
+                
+                <!-- Navigation Desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1"><span data-i18n="gcvc">GCVC</span></a>
+                    <a href="/buy-gift-cards" class="text-gray-700 hover:text-blue-600 font-medium"><span data-i18n="buy_giftcards">Buy giftcards</span></a>
+                    <a href="/sell-gift-cards" class="text-gray-700 hover:text-blue-600 font-medium"><span data-i18n="sell_giftcards">Sell GiftCards</span></a>
+                </nav>
+                
+                <!-- Menu mobile button -->
+                <div class="flex items-center space-x-4">
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </header>
+
+    <main>
+
+        <!-- Image d'en-tête -->
+        <div class="bg-header w-full"></div>
+
+        <!-- Bannière avec texte -->
+        <div class="relative bg-banner py-32" style="background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0824.jpg');">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="container mx-auto px-4 relative">
+                <div class="bg-white/30 backdrop-blur-sm inline-block p-8 rounded-lg shadow-xl max-w-lg">
+                    <h1 class="text-4xl font-bold uppercase text-gray-900" data-i18n="gcvc">GCVC</h1>
+                    <h4 class="text-xl font-bold mt-2 text-gray-800" data-i18n="gift_card_validity_checker">GIFT CARD VALIDITY CHECKER</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Titre section vérification -->
+        <h1 class="text-3xl font-bold text-center mt-12 mb-8 uppercase" data-i18n="verify_title">VERIFY GIFT CARD VALIDITY</h1>
+
+        <!-- Formulaire de vérification -->
+        <div class="container mx-auto px-4 max-w-4xl mb-16">
+            <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+                <form id="giftcard-form" class="space-y-6">
+                    
+                    <!-- Ligne 1: Email et Pays -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="email_address">Email Address</label>
+                            <input type="email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="select_country">Select Country</label>
+                            <select class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
+                                <option data-i18n="australia">Australia</option>
+                                <option data-i18n="austria">Austria</option>
+                                <option data-i18n="belgium">Belgium</option>
+                                <option data-i18n="canada">Canada</option>
+                                <option data-i18n="france">France</option>
+                                <option data-i18n="germany">Germany</option>
+                                <option data-i18n="uk">United Kingdom</option>
+                                <option data-i18n="usa">United States</option>
+                                <option data-i18n="japan">Japan</option>
+                                <option data-i18n="china">China</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Ligne 2: Type de carte, Code, Montant, Devise -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="select_gift_card">Select gift card</label>
+                            <select class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
+                                <option data-i18n="amazon">Amazon Gift Card</option>
+                                <option data-i18n="amex">American Express Gift Card</option>
+                                <option data-i18n="apple">Apple Store Gift Card</option>
+                                <option data-i18n="google">Google play Gift Card</option>
+                                <option data-i18n="itunes">iTunes Gift Card</option>
+                                <option data-i18n="steam">Steam Wallet Gift Card</option>
+                                <option data-i18n="bestbuy">Best Buy Gift Card</option>
+                                <option data-i18n="walmart">Walmart Gift Card</option>
+                                <option data-i18n="target">Target Gift Card</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="gift_card_code">GIFT CARD CODE</label>
+                            <input type="text" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="amount">AMOUNT</label>
+                            <input type="number" min="1" max="1000" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="select_currency">Select Currency</label>
+                            <select class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition">
+                                <option data-i18n="usd">USD $</option>
+                                <option data-i18n="eur">Euro €</option>
+                                <option data-i18n="gbp">GBP £</option>
+                                <option data-i18n="cad">CAD $</option>
+                                <option data-i18n="aud">AUD $</option>
+                                <option data-i18n="jpy">JPY ¥</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Upload de fichier -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="upload_card">Upload Card</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label class="flex flex-col w-full h-32 border-4 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all cursor-pointer">
+                                <div class="flex flex-col items-center justify-center pt-7">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                                    <p class="text-sm text-gray-500" data-i18n="choose_file">Choose File</p>
+                                    <p class="text-xs text-gray-400 mt-1" id="file-name" data-i18n="no_file_chosen">No file chosen</p>
+                                </div>
+                                <input type="file" id="file-input" class="opacity-0" accept="image/*,.pdf" />
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de vérification -->
+                    <div class="text-center pt-4">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-lg shadow-lg hover-scale transition-all">
+                            <i class="fas fa-check-circle mr-2"></i><span data-i18n="verify">Verify</span>
+                        </button>
+                    </div>
+
+                    <!-- Zone de résultat -->
+                    <div id="result" class="mt-6 p-5 rounded-lg hidden"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Galerie d'images (3 cartes) -->
+        <div class="container mx-auto px-4 max-w-6xl mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0822.jpg" alt="Gift card checker" class="rounded-lg shadow-md w-full">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0839-e1704809966884.jpg" alt="Gift card checker" class="rounded-lg shadow-md w-full">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0843-e1704810076576.jpg" alt="Gift card checker" class="rounded-lg shadow-md w-full">
+            </div>
+        </div>
+
+        <!-- Section "Gift Card Validity Checker" avec image et texte -->
+        <section class="bg-gray-200 py-16">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2">
+                        <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0826.jpg" alt="Gift Card Validity Checker" class="rounded-lg shadow-2xl w-4/5 mx-auto">
+                    </div>
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-bold uppercase mb-4" data-i18n="gift_card_validity_checker">Gift Card Validity Checker</h2>
+                        <p class="text-gray-700 mb-4" data-i18n="description_1">With just a few clicks, you can enter the necessary details, such as the card number and PIN, and receive an instant report on the card's validity. Gift Card validity Check, Verify Gift Card validity, Verify Gift Card balance, Check Gift Card balance</p>
+                        <p class="text-gray-700 mb-6" data-i18n="description_2">Gift Card Validity Checkers are innovative tools that allow you to quickly and effortlessly verify the balance and expiration date of your gift card. Whether you receive a gift card for a birthday, anniversary, or holiday, using a Gift Card Validity Checker not only provides peace of mind but also saves you from the agony of discovering a forgotten or expired gift card.</p>
+                        <a href="/buy-gift-cards" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition"><span data-i18n="buy_giftcards">buy gift cards</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mini galerie 4 images -->
+        <div class="container mx-auto px-4 max-w-6xl my-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0850.jpg" alt="Vanilla giftcard" class="rounded-lg shadow-md w-full">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0848.jpg" alt="Amex giftcard" class="rounded-lg shadow-md w-full">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0852-e1704810414707.jpg" alt="Walmart giftcard" class="rounded-lg shadow-md w-full">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0845-e1704810537201.jpg" alt="Sephora giftcard" class="rounded-lg shadow-md w-full">
+            </div>
+        </div>
+
+        <!-- Pourquoi vérifier ? -->
+        <div class="container mx-auto px-4 max-w-4xl text-center mb-12">
+            <h2 class="text-3xl font-bold mb-6" data-i18n="why_verify">Why Verify Gift Card Validity?</h2>
+            <p class="text-gray-700 text-lg leading-relaxed" data-i18n="why_verify_text">
+                When we receive a gift card, it's only natural to delay using it until the perfect moment. However, time can easily slip away, and before you know it, that gift card may be left unused or even expired. Gift Card validity Check, Verify Gift Card validity, Verify Gift Card balance, Check Gift Card balance. Verifying the validity of your gift card ensures that you won't be caught off guard when you finally decide to redeem it, allowing you to make the most of your gift and enjoy a hassle-free shopping experience.
+            </p>
+        </div>
+
+        <!-- Deux images côte à côte -->
+        <div class="container mx-auto px-4 max-w-6xl mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0840-1400x787.jpg" alt="Gift card checker" class="rounded-lg shadow-md w-full">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0834.jpg" alt="Gift card checker" class="rounded-lg shadow-md w-11/12 ml-auto">
+            </div>
+        </div>
+
+        <!-- Trois images finales avec titre au milieu -->
+        <div class="container mx-auto px-4 max-w-6xl mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0842.jpg" alt="Gift card checker" class="rounded-lg shadow-md w-full">
+                <div>
+                    <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image3.jpeg" alt="Gift Card validity Check" class="rounded-lg shadow-md w-full mb-4">
+                    <h2 class="text-2xl font-bold text-blue-600 text-center" data-i18n="gift_card_validity_checker">GIFT CARD VALIDITY CHECKER</h2>
+                </div>
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0838.jpg" alt="Ebay giftcard" class="rounded-lg shadow-md w-full">
+            </div>
+        </div>
+
+        <!-- Message box avec fond -->
+        <div class="relative bg-cover bg-center py-16 my-12" style="background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0841.jpg');">
+            <div class="absolute inset-0 bg-black/40"></div>
+            <div class="container mx-auto px-4 relative text-white text-center">
+                <h2 class="text-3xl font-bold uppercase mb-4" data-i18n="gift_card_validity_checker">GIFT CARD VALIDITY CHECKER</h2>
+                <p class="text-xl max-w-2xl mx-auto" data-i18n="message_box_text">With just a few clicks, you can enter the necessary details, such as the card number and PIN, and receive an instant report on the card's validity.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">admin@giftcardvaliditychecker.com | 38 place Jean Jaurès, rdc gauche rdc gauche 10000 Troyes | 910 E Main St, Richmond, VA 23219 USA</p>
+            <p class="text-gray-400">Copyright 2019© <strong>GCVC</strong></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript avec le dictionnaire de traduction complet -->
+    <script>
+        (function() {
+            // ==================== DICTIONNAIRE DE TRADUCTION ====================
+            const translations = {
+                en: {
+                    // Menu et navigation
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Buy giftcards",
+                    sell_giftcards: "Sell GiftCards",
+                    
+                    // Bannière
+                    gift_card_validity_checker: "GIFT CARD VALIDITY CHECKER",
+                    
+                    // Titres
+                    verify_title: "VERIFY GIFT CARD VALIDITY",
+                    
+                    // Formulaire
+                    email_address: "Email Address",
+                    select_country: "Select Country",
+                    select_gift_card: "Select gift card",
+                    gift_card_code: "GIFT CARD CODE",
+                    amount: "AMOUNT",
+                    select_currency: "Select Currency",
+                    upload_card: "Upload Card",
+                    choose_file: "Choose File",
+                    no_file_chosen: "No file chosen",
+                    verify: "Verify",
+                    
+                    // Pays
+                    australia: "Australia",
+                    austria: "Austria",
+                    belgium: "Belgium",
+                    canada: "Canada",
+                    france: "France",
+                    germany: "Germany",
+                    uk: "United Kingdom",
+                    usa: "United States",
+                    japan: "Japan",
+                    china: "China",
+                    
+                    // Cartes cadeaux
+                    amazon: "Amazon Gift Card",
+                    amex: "American Express Gift Card",
+                    apple: "Apple Store Gift Card",
+                    google: "Google play Gift Card",
+                    itunes: "iTunes Gift Card",
+                    steam: "Steam Wallet Gift Card",
+                    bestbuy: "Best Buy Gift Card",
+                    walmart: "Walmart Gift Card",
+                    target: "Target Gift Card",
+                    
+                    // Devises
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    
+                    // Descriptions
+                    description_1: "With just a few clicks, you can enter the necessary details, such as the card number and PIN, and receive an instant report on the card's validity. Gift Card validity Check, Verify Gift Card validity, Verify Gift Card balance, Check Gift Card balance",
+                    description_2: "Gift Card Validity Checkers are innovative tools that allow you to quickly and effortlessly verify the balance and expiration date of your gift card. Whether you receive a gift card for a birthday, anniversary, or holiday, using a Gift Card Validity Checker not only provides peace of mind but also saves you from the agony of discovering a forgotten or expired gift card.",
+                    
+                    // Pourquoi vérifier
+                    why_verify: "Why Verify Gift Card Validity?",
+                    why_verify_text: "When we receive a gift card, it's only natural to delay using it until the perfect moment. However, time can easily slip away, and before you know it, that gift card may be left unused or even expired. Gift Card validity Check, Verify Gift Card validity, Verify Gift Card balance, Check Gift Card balance. Verifying the validity of your gift card ensures that you won't be caught off guard when you finally decide to redeem it, allowing you to make the most of your gift and enjoy a hassle-free shopping experience.",
+                    
+                    // Message box
+                    message_box_text: "With just a few clicks, you can enter the necessary details, such as the card number and PIN, and receive an instant report on the card's validity."
+                },
+                fr: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Acheter des cartes",
+                    sell_giftcards: "Vendre des cartes",
+                    gift_card_validity_checker: "VÉRIFICATEUR DE VALIDITÉ DE CARTE CADEAU",
+                    verify_title: "VÉRIFIER LA VALIDITÉ DE LA CARTE CADEAU",
+                    email_address: "Adresse e-mail",
+                    select_country: "Sélectionner le pays",
+                    select_gift_card: "Sélectionner une carte",
+                    gift_card_code: "CODE DE LA CARTE",
+                    amount: "MONTANT",
+                    select_currency: "Sélectionner la devise",
+                    upload_card: "Télécharger la carte",
+                    choose_file: "Choisir un fichier",
+                    no_file_chosen: "Aucun fichier choisi",
+                    verify: "Vérifier",
+                    australia: "Australie",
+                    austria: "Autriche",
+                    belgium: "Belgique",
+                    canada: "Canada",
+                    france: "France",
+                    germany: "Allemagne",
+                    uk: "Royaume-Uni",
+                    usa: "États-Unis",
+                    japan: "Japon",
+                    china: "Chine",
+                    amazon: "Carte Amazon",
+                    amex: "Carte American Express",
+                    apple: "Carte Apple Store",
+                    google: "Carte Google Play",
+                    itunes: "Carte iTunes",
+                    steam: "Carte Steam Wallet",
+                    bestbuy: "Carte Best Buy",
+                    walmart: "Carte Walmart",
+                    target: "Carte Target",
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    description_1: "En quelques clics, vous pouvez entrer les détails nécessaires, comme le numéro de carte et le code PIN, et recevoir un rapport instantané sur la validité de la carte. Vérification de validité de carte cadeau, Vérifier la validité, Vérifier le solde.",
+                    description_2: "Les vérificateurs de validité de carte cadeau sont des outils innovants qui vous permettent de vérifier rapidement et sans effort le solde et la date d'expiration de votre carte. Que vous receviez une carte pour un anniversaire ou une fête, utiliser un vérificateur vous offre une tranquillité d'esprit et évite les mauvaises surprises.",
+                    why_verify: "Pourquoi vérifier la validité ?",
+                    why_verify_text: "Quand nous recevons une carte cadeau, il est naturel de retarder son utilisation. Cependant, le temps passe vite et la carte peut finir par expirer. Vérifier la validité de votre carte vous assure de ne pas avoir de mauvaise surprise et de profiter pleinement de votre cadeau.",
+                    message_box_text: "En quelques clics, entrez le numéro de carte et le code PIN pour obtenir un rapport instantané sur la validité de la carte."
+                },
+                de: {
+                    menu: "Menü",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Geschenkkarten kaufen",
+                    sell_giftcards: "Geschenkkarten verkaufen",
+                    gift_card_validity_checker: "GESCHENKKARTEN-GÜLTIGKEITSPRÜFER",
+                    verify_title: "GÜLTIGKEIT DER GESCHENKKARTE PRÜFEN",
+                    email_address: "E-Mail-Adresse",
+                    select_country: "Land auswählen",
+                    select_gift_card: "Geschenkkarte auswählen",
+                    gift_card_code: "GESCHENKKARTENCODE",
+                    amount: "BETRAG",
+                    select_currency: "Währung auswählen",
+                    upload_card: "Karte hochladen",
+                    choose_file: "Datei auswählen",
+                    no_file_chosen: "Keine Datei ausgewählt",
+                    verify: "Prüfen",
+                    australia: "Australien",
+                    austria: "Österreich",
+                    belgium: "Belgien",
+                    canada: "Kanada",
+                    france: "Frankreich",
+                    germany: "Deutschland",
+                    uk: "Vereinigtes Königreich",
+                    usa: "Vereinigte Staaten",
+                    japan: "Japan",
+                    china: "China",
+                    amazon: "Amazon Geschenkkarte",
+                    amex: "American Express Geschenkkarte",
+                    apple: "Apple Store Geschenkkarte",
+                    google: "Google Play Geschenkkarte",
+                    itunes: "iTunes Geschenkkarte",
+                    steam: "Steam Wallet Geschenkkarte",
+                    bestbuy: "Best Buy Geschenkkarte",
+                    walmart: "Walmart Geschenkkarte",
+                    target: "Target Geschenkkarte",
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    description_1: "Mit nur wenigen Klicks können Sie die erforderlichen Details wie Kartennummer und PIN eingeben und erhalten einen sofortigen Bericht über die Gültigkeit der Karte. Geschenkkarten-Gültigkeitsprüfung, Guthaben prüfen.",
+                    description_2: "Geschenkkarten-Gültigkeitsprüfer sind innovative Werkzeuge, mit denen Sie schnell und mühelos den Kontostand und das Ablaufdatum Ihrer Geschenkkarte überprüfen können. Sie bieten Seelenfrieden und ersparen Ihnen die Entdeckung einer vergessenen oder abgelaufenen Karte.",
+                    why_verify: "Warum die Gültigkeit prüfen?",
+                    why_verify_text: "Wenn wir eine Geschenkkarte erhalten, ist es nur natürlich, die Verwendung aufzuschieben. Doch die Zeit verfliegt und die Karte könnte ungenutzt bleiben oder ablaufen. Die Überprüfung der Gültigkeit stellt sicher, dass Sie beim Einlösen nicht überrascht werden.",
+                    message_box_text: "Mit nur wenigen Klicks können Sie die Kartennummer und PIN eingeben und einen sofortigen Bericht über die Gültigkeit der Karte erhalten."
+                },
+                it: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Acquista carte regalo",
+                    sell_giftcards: "Vendi carte regalo",
+                    gift_card_validity_checker: "CONTROLLO VALIDITÀ CARTA REGALO",
+                    verify_title: "VERIFICA VALIDITÀ CARTA REGALO",
+                    email_address: "Indirizzo email",
+                    select_country: "Seleziona paese",
+                    select_gift_card: "Seleziona carta regalo",
+                    gift_card_code: "CODICE CARTA REGALO",
+                    amount: "IMPORTO",
+                    select_currency: "Seleziona valuta",
+                    upload_card: "Carica carta",
+                    choose_file: "Scegli file",
+                    no_file_chosen: "Nessun file scelto",
+                    verify: "Verifica",
+                    australia: "Australia",
+                    austria: "Austria",
+                    belgium: "Belgio",
+                    canada: "Canada",
+                    france: "Francia",
+                    germany: "Germania",
+                    uk: "Regno Unito",
+                    usa: "Stati Uniti",
+                    japan: "Giappone",
+                    china: "Cina",
+                    amazon: "Carta regalo Amazon",
+                    amex: "Carta regalo American Express",
+                    apple: "Carta regalo Apple Store",
+                    google: "Carta regalo Google Play",
+                    itunes: "Carta regalo iTunes",
+                    steam: "Carta regalo Steam Wallet",
+                    bestbuy: "Carta regalo Best Buy",
+                    walmart: "Carta regalo Walmart",
+                    target: "Carta regalo Target",
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    description_1: "Con pochi clic puoi inserire i dettagli necessari, come il numero della carta e il PIN, e ricevere un rapporto immediato sulla validità della carta. Controllo validità carta regalo, Verifica saldo.",
+                    description_2: "I controllori di validità delle carte regalo sono strumenti innovativi che ti permettono di verificare rapidamente e senza sforzo il saldo e la data di scadenza della tua carta. Usarli ti dà tranquillità e ti evita la scoperta di una carta dimenticata o scaduta.",
+                    why_verify: "Perché verificare la validità?",
+                    why_verify_text: "Quando riceviamo una carta regalo, è naturale ritardarne l'uso. Ma il tempo passa e la carta potrebbe rimanere inutilizzata o scadere. Verificare la validità assicura che non ci siano sorprese quando decidi di usarla.",
+                    message_box_text: "Con pochi clic, inserisci il numero della carta e il PIN per ottenere un rapporto immediato sulla validità della carta."
+                },
+                nl: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Cadeaubonnen kopen",
+                    sell_giftcards: "Cadeaubonnen verkopen",
+                    gift_card_validity_checker: "CADEAUBON GELDIGHEIDSCONTROLE",
+                    verify_title: "CONTROLEER GELDIGHEID CADEAUBON",
+                    email_address: "E-mailadres",
+                    select_country: "Selecteer land",
+                    select_gift_card: "Selecteer cadeaubon",
+                    gift_card_code: "CADEAUBONCODE",
+                    amount: "BEDRAG",
+                    select_currency: "Selecteer valuta",
+                    upload_card: "Bon uploaden",
+                    choose_file: "Kies bestand",
+                    no_file_chosen: "Geen bestand gekozen",
+                    verify: "Controleren",
+                    australia: "Australië",
+                    austria: "Oostenrijk",
+                    belgium: "België",
+                    canada: "Canada",
+                    france: "Frankrijk",
+                    germany: "Duitsland",
+                    uk: "Verenigd Koninkrijk",
+                    usa: "Verenigde Staten",
+                    japan: "Japan",
+                    china: "China",
+                    amazon: "Amazon Cadeaubon",
+                    amex: "American Express Cadeaubon",
+                    apple: "Apple Store Cadeaubon",
+                    google: "Google Play Cadeaubon",
+                    itunes: "iTunes Cadeaubon",
+                    steam: "Steam Wallet Cadeaubon",
+                    bestbuy: "Best Buy Cadeaubon",
+                    walmart: "Walmart Cadeaubon",
+                    target: "Target Cadeaubon",
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    description_1: "Met slechts een paar klikken kunt u de benodigde gegevens invoeren, zoals het kaartnummer en de pincode, en ontvangt u een direct rapport over de geldigheid van de kaart. Cadeaubon geldigheid controleren, Saldo controleren.",
+                    description_2: "Cadeaubon-geldigheidscontroles zijn innovatieve hulpmiddelen waarmee u snel en moeiteloos het saldo en de vervaldatum van uw cadeaubon kunt controleren. Ze bieden gemoedsrust en voorkomen dat u een vergeten of verlopen bon ontdekt.",
+                    why_verify: "Waarom geldigheid controleren?",
+                    why_verify_text: "Wanneer we een cadeaubon ontvangen, is het normaal om het gebruik uit te stellen. Maar de tijd kan gemakkelijk wegglippen en voordat u het weet, blijft de bon ongebruikt of is hij verlopen. Controle zorgt dat u niet voor verrassingen komt te staan.",
+                    message_box_text: "Voer in een paar klikken het kaartnummer en de pincode in en ontvang een direct rapport over de geldigheid van de kaart."
+                },
+                no: {
+                    menu: "Meny",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Kjøp gavekort",
+                    sell_giftcards: "Selg gavekort",
+                    gift_card_validity_checker: "GAVEKORT GYLDIGHETSKONTROLL",
+                    verify_title: "BEKREFT GAVEKORTETS GYLDIGHET",
+                    email_address: "E-postadresse",
+                    select_country: "Velg land",
+                    select_gift_card: "Velg gavekort",
+                    gift_card_code: "GAVEKORTKODE",
+                    amount: "BELØP",
+                    select_currency: "Velg valuta",
+                    upload_card: "Last opp kort",
+                    choose_file: "Velg fil",
+                    no_file_chosen: "Ingen fil valgt",
+                    verify: "Bekreft",
+                    australia: "Australia",
+                    austria: "Østerrike",
+                    belgium: "Belgia",
+                    canada: "Canada",
+                    france: "Frankrike",
+                    germany: "Tyskland",
+                    uk: "Storbritannia",
+                    usa: "USA",
+                    japan: "Japan",
+                    china: "Kina",
+                    amazon: "Amazon Gavekort",
+                    amex: "American Express Gavekort",
+                    apple: "Apple Store Gavekort",
+                    google: "Google Play Gavekort",
+                    itunes: "iTunes Gavekort",
+                    steam: "Steam Wallet Gavekort",
+                    bestbuy: "Best Buy Gavekort",
+                    walmart: "Walmart Gavekort",
+                    target: "Target Gavekort",
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    description_1: "Med bare noen få klikk kan du legge inn nødvendige detaljer, som kortnummer og PIN, og få en umiddelbar rapport om kortets gyldighet. Gavekort gyldighetssjekk, Bekreft saldo.",
+                    description_2: "Gavekort gyldighetskontroller er innovative verktøy som lar deg raskt og enkelt bekrefte saldoen og utløpsdatoen til gavekortet ditt. De gir trygghet og sparer deg for å oppdage et glemt eller utløpt gavekort.",
+                    why_verify: "Hvorfor bekrefte gyldighet?",
+                    why_verify_text: "Når vi mottar et gavekort, er det naturlig å utsette bruken. Men tiden kan lett løpe fra oss, og før du vet ordet av det, kan gavekortet være ubrukt eller utløpt. Å bekrefte gyldigheten sikrer at du ikke blir overrasket når du skal bruke det.",
+                    message_box_text: "Med noen få klikk kan du legge inn kortnummer og PIN og få en umiddelbar rapport om kortets gyldighet."
+                },
+                pl: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Kup karty podarunkowe",
+                    sell_giftcards: "Sprzedaj karty podarunkowe",
+                    gift_card_validity_checker: "SPRAWDZANIE WAŻNOŚCI KARTY PODARUNKOWEJ",
+                    verify_title: "SPRAWDŹ WAŻNOŚĆ KARTY PODARUNKOWEJ",
+                    email_address: "Adres e-mail",
+                    select_country: "Wybierz kraj",
+                    select_gift_card: "Wybierz kartę podarunkową",
+                    gift_card_code: "KOD KARTY PODARUNKOWEJ",
+                    amount: "KWOTA",
+                    select_currency: "Wybierz walutę",
+                    upload_card: "Prześlij kartę",
+                    choose_file: "Wybierz plik",
+                    no_file_chosen: "Nie wybrano pliku",
+                    verify: "Sprawdź",
+                    australia: "Australia",
+                    austria: "Austria",
+                    belgium: "Belgia",
+                    canada: "Kanada",
+                    france: "Francja",
+                    germany: "Niemcy",
+                    uk: "Wielka Brytania",
+                    usa: "Stany Zjednoczone",
+                    japan: "Japonia",
+                    china: "Chiny",
+                    amazon: "Karta podarunkowa Amazon",
+                    amex: "Karta podarunkowa American Express",
+                    apple: "Karta podarunkowa Apple Store",
+                    google: "Karta podarunkowa Google Play",
+                    itunes: "Karta podarunkowa iTunes",
+                    steam: "Karta podarunkowa Steam Wallet",
+                    bestbuy: "Karta podarunkowa Best Buy",
+                    walmart: "Karta podarunkowa Walmart",
+                    target: "Karta podarunkowa Target",
+                    usd: "USD $",
+                    eur: "Euro €",
+                    gbp: "GBP £",
+                    cad: "CAD $",
+                    aud: "AUD $",
+                    jpy: "JPY ¥",
+                    description_1: "Za pomocą zaledwie kilku kliknięć możesz wprowadzić niezbędne dane, takie jak numer karty i PIN, i otrzymać natychmiastowy raport o ważności karty. Sprawdź ważność karty podarunkowej, Sprawdź saldo.",
+                    description_2: "Narzędzia do sprawdzania ważności kart podarunkowych to innowacyjne rozwiązania, które pozwalają szybko i bez wysiłku zweryfikować saldo i datę ważności karty. Zapewniają spokój ducha i oszczędzają przed odkryciem zapomnianej lub przeterminowanej karty.",
+                    why_verify: "Dlaczego warto sprawdzać ważność?",
+                    why_verify_text: "Kiedy otrzymujemy kartę podarunkową, naturalne jest odkładanie jej użycia. Jednak czas szybko mija i zanim się obejrzysz, karta może pozostać niewykorzystana lub stracić ważność. Sprawdzenie ważności gwarantuje, że nie będziesz zaskoczony, gdy zdecydujesz się ją zrealizować.",
+                    message_box_text: "Za pomocą kilku kliknięć wprowadź numer karty i PIN, aby otrzymać natychmiastowy raport o ważności karty."
+                },
+                ar: {
+                    menu: "القائمة",
+                    gcvc: "GCVC",
+                    buy_giftcards: "شراء بطاقات الهدايا",
+                    sell_giftcards: "بيع بطاقات الهدايا",
+                    gift_card_validity_checker: "التحقق من صحة بطاقة الهدايا",
+                    verify_title: "التحقق من صحة بطاقة الهدايا",
+                    email_address: "عنوان البريد الإلكتروني",
+                    select_country: "اختر الدولة",
+                    select_gift_card: "اختر بطاقة الهدايا",
+                    gift_card_code: "رمز بطاقة الهدايا",
+                    amount: "المبلغ",
+                    select_currency: "اختر العملة",
+                    upload_card: "رفع البطاقة",
+                    choose_file: "اختر ملف",
+                    no_file_chosen: "لم يتم اختيار ملف",
+                    verify: "تحقق",
+                    australia: "أستراليا",
+                    austria: "النمسا",
+                    belgium: "بلجيكا",
+                    canada: "كندا",
+                    france: "فرنسا",
+                    germany: "ألمانيا",
+                    uk: "المملكة المتحدة",
+                    usa: "الولايات المتحدة",
+                    japan: "اليابان",
+                    china: "الصين",
+                    amazon: "بطاقة أمازون",
+                    amex: "بطاقة أمريكان إكسبريس",
+                    apple: "بطاقة آب ستور",
+                    google: "بطاقة جوجل بلاي",
+                    itunes: "بطاقة آيتيونز",
+                    steam: "بطاقة ستيم",
+                    bestbuy: "بطاقة بيست باي",
+                    walmart: "بطاقة وول مارت",
+                    target: "بطاقة تارغت",
+                    usd: "دولار أمريكي",
+                    eur: "يورو",
+                    gbp: "جنيه إسترليني",
+                    cad: "دولار كندي",
+                    aud: "دولار أسترالي",
+                    jpy: "ين ياباني",
+                    description_1: "ببضع نقرات فقط، يمكنك إدخال التفاصيل الضرورية مثل رقم البطاقة والرمز السري والحصول على تقرير فوري عن صلاحية البطاقة. التحقق من صلاحية بطاقة الهدايا، التحقق من الرصيد.",
+                    description_2: "أدوات التحقق من صلاحية بطاقات الهدايا هي أدوات مبتكرة تتيح لك التحقق بسرعة وسهولة من الرصيد وتاريخ انتهاء الصلاحية. استخدامها يمنحك راحة البال ويجنبك اكتشاف بطاقة منسية أو منتهية الصلاحية.",
+                    why_verify: "لماذا التحقق من الصلاحية؟",
+                    why_verify_text: "عندما نتلقى بطاقة هدايا، من الطبيعي تأجيل استخدامها. ولكن الوقت يمضي بسرعة وقد تبقى البطاقة غير مستخدمة أو تنتهي صلاحيتها. التحقق من الصلاحية يضمن عدم وجود مفاجآت عندما تقرر استخدامها.",
+                    message_box_text: "ببضع نقرات، أدخل رقم البطاقة والرمز السري للحصول على تقرير فوري عن صلاحية البطاقة."
+                },
+                "zh-CN": {
+                    menu: "菜单",
+                    gcvc: "GCVC",
+                    buy_giftcards: "购买礼品卡",
+                    sell_giftcards: "出售礼品卡",
+                    gift_card_validity_checker: "礼品卡有效性检查器",
+                    verify_title: "验证礼品卡有效性",
+                    email_address: "电子邮件地址",
+                    select_country: "选择国家",
+                    select_gift_card: "选择礼品卡",
+                    gift_card_code: "礼品卡代码",
+                    amount: "金额",
+                    select_currency: "选择货币",
+                    upload_card: "上传卡片",
+                    choose_file: "选择文件",
+                    no_file_chosen: "未选择文件",
+                    verify: "验证",
+                    australia: "澳大利亚",
+                    austria: "奥地利",
+                    belgium: "比利时",
+                    canada: "加拿大",
+                    france: "法国",
+                    germany: "德国",
+                    uk: "英国",
+                    usa: "美国",
+                    japan: "日本",
+                    china: "中国",
+                    amazon: "亚马逊礼品卡",
+                    amex: "美国运通礼品卡",
+                    apple: "苹果商店礼品卡",
+                    google: "谷歌Play礼品卡",
+                    itunes: "iTunes礼品卡",
+                    steam: "Steam钱包礼品卡",
+                    bestbuy: "百思买礼品卡",
+                    walmart: "沃尔玛礼品卡",
+                    target: "塔吉特礼品卡",
+                    usd: "美元",
+                    eur: "欧元",
+                    gbp: "英镑",
+                    cad: "加元",
+                    aud: "澳元",
+                    jpy: "日元",
+                    description_1: "只需点击几下，您就可以输入必要的详细信息，如卡号和PIN码，并立即收到关于卡有效性的报告。礼品卡有效性检查，验证余额。",
+                    description_2: "礼品卡有效性检查器是创新工具，可让您快速轻松地验证礼品卡的余额和到期日。使用它们可以让您安心，避免发现被遗忘或过期的礼品卡。",
+                    why_verify: "为什么要验证有效性？",
+                    why_verify_text: "当我们收到礼品卡时，很自然地会推迟使用。但时间很容易流逝，不知不觉中，礼品卡可能未被使用或已过期。验证有效性可确保您在决定使用时不会遇到意外。",
+                    message_box_text: "只需点击几下，输入卡号和PIN码，即可获得关于卡有效性的即时报告。"
+                }
+            };
+
+            // ==================== FONCTION DE CHANGEMENT DE LANGUE ====================
+            function changeLanguage(lang) {
+                // Vérifier si la langue existe dans le dictionnaire
+                if (!translations[lang]) {
+                    console.warn(`Langue ${lang} non disponible, utilisation de l'anglais par défaut`);
+                    lang = 'en';
+                }
+                
+                // Récupérer tous les éléments avec l'attribut data-i18n
+                const elements = document.querySelectorAll('[data-i18n]');
+                
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    
+                    // Si la traduction existe pour cette clé
+                    if (translations[lang] && translations[lang][key]) {
+                        // Cas spécial pour les options de select (on change le texte affiché)
+                        if (element.tagName === 'OPTION') {
+                            element.textContent = translations[lang][key];
+                        } 
+                        // Pour les autres éléments (span, p, h1, h2, etc.)
+                        else {
+                            element.textContent = translations[lang][key];
+                        }
+                    } else {
+                        console.warn(`Traduction manquante pour la clé: ${key} en langue: ${lang}`);
+                    }
+                });
+                
+                // Mettre à jour l'affichage du bouton de langue
+                const currentLangSpan = document.getElementById('current-lang');
+                if (currentLangSpan) {
+                    const langNames = {
+                        en: 'English',
+                        fr: 'Français',
+                        de: 'Deutsch',
+                        it: 'Italiano',
+                        nl: 'Nederlands',
+                        no: 'Norsk',
+                        pl: 'Polski',
+                        ar: 'العربية',
+                        'zh-CN': '中文'
+                    };
+                    currentLangSpan.textContent = langNames[lang] || 'English';
+                }
+                
+                // Sauvegarder la préférence de langue
+                localStorage.setItem('preferredLanguage', lang);
+                
+                // Gérer la direction du texte pour l'arabe
+                if (lang === 'ar') {
+                    document.documentElement.dir = 'rtl';
+                } else {
+                    document.documentElement.dir = 'ltr';
+                }
+            }
+
+            // ==================== INITIALISATION ====================
+            
+            // Charger la langue préférée au démarrage
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            changeLanguage(savedLang);
+            
+            // Connecter les options de langue
+            const langOptions = document.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // Menu mobile style YouTube
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileOverlay = document.getElementById('mobile-overlay');
+            const body = document.body;
+            
+            function openMenu() {
+                mobileMenu.classList.add('open');
+                mobileOverlay.classList.add('active');
+                body.classList.add('menu-open');
+            }
+            
+            function closeMenu() {
+                mobileMenu.classList.remove('open');
+                mobileOverlay.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+            
+            if (menuBtn && mobileMenu && mobileOverlay) {
+                menuBtn.addEventListener('click', openMenu);
+                mobileOverlay.addEventListener('click', closeMenu);
+                
+                // Fermer avec la touche Echap
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                        closeMenu();
+                    }
+                });
+            }
+            
+            // Upload de fichier
+            const fileInput = document.getElementById('file-input');
+            const fileNameSpan = document.getElementById('file-name');
+            
+            if (fileInput && fileNameSpan) {
+                fileInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        fileNameSpan.textContent = this.files[0].name;
+                        // Note: le data-i18n est écrasé, mais c'est normal pour le nom du fichier
+                    } else {
+                        fileNameSpan.textContent = 'No file chosen';
+                        // On pourrait re-traduire ici, mais on laisse simple
+                    }
+                });
+            }
+            
+            // Formulaire de vérification (simulation)
+            const form = document.getElementById('giftcard-form');
+            const resultDiv = document.getElementById('result');
+
+            if (form && resultDiv) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const isValid = Math.random() > 0.2;
+                    const currentLang = localStorage.getItem('preferredLanguage') || 'en';
+                    
+                    if (isValid) {
+                        const balance = (Math.random() * 200).toFixed(2);
+                        const messages = {
+                            en: { title: "Card is valid!", balance: "Remaining balance:", expiry: "Expiration date:" },
+                            fr: { title: "Carte valide !", balance: "Solde restant :", expiry: "Date d'expiration :" },
+                            de: { title: "Karte ist gültig!", balance: "Verbleibendes Guthaben:", expiry: "Ablaufdatum:" },
+                            it: { title: "Carta valida!", balance: "Saldo residuo:", expiry: "Data di scadenza:" },
+                            nl: { title: "Kaart is geldig!", balance: "Resterend saldo:", expiry: "Vervaldatum:" },
+                            no: { title: "Kortet er gyldig!", balance: "Gjenstående saldo:", expiry: "Utløpsdato:" },
+                            pl: { title: "Karta jest ważna!", balance: "Pozostałe saldo:", expiry: "Data ważności:" },
+                            ar: { title: "البطاقة سارية!", balance: "الرصيد المتبقي:", expiry: "تاريخ انتهاء الصلاحية:" },
+                            'zh-CN': { title: "卡有效！", balance: "剩余余额：", expiry: "到期日期：" }
+                        };
+                        const msg = messages[currentLang] || messages.en;
+                        
+                        resultDiv.innerHTML = `
+                            <div class="bg-green-100 border-l-8 border-green-500 p-5 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-check-circle text-green-600 text-3xl mr-3"></i>
+                                    <h3 class="text-xl font-bold text-green-800">${msg.title}</h3>
+                                </div>
+                                <p class="text-green-800 mb-2"><span class="font-semibold">${msg.balance}</span> $${balance}</p>
+                                <p class="text-green-800"><span class="font-semibold">${msg.expiry}</span> December 31, 2026</p>
+                            </div>
+                        `;
+                    } else {
+                        const messages = {
+                            en: { title: "Invalid or expired card", text: "This gift card appears to be no longer valid. Please check the card number and PIN." },
+                            fr: { title: "Carte invalide ou expirée", text: "Cette carte cadeau semble ne plus être valide. Vérifiez le numéro et le code PIN." },
+                            de: { title: "Ungültige oder abgelaufene Karte", text: "Diese Geschenkkarte scheint nicht mehr gültig zu sein. Bitte überprüfen Sie Kartennummer und PIN." },
+                            it: { title: "Carta non valida o scaduta", text: "Questa carta regalo sembra non essere più valida. Controlla il numero e il PIN." },
+                            nl: { title: "Ongeldige of verlopen kaart", text: "Deze cadeaubon lijkt niet langer geldig. Controleer het nummer en de pincode." },
+                            no: { title: "Ugyldig eller utløpt kort", text: "Dette gavekortet ser ikke lenger ut til å være gyldig. Sjekk nummer og PIN." },
+                            pl: { title: "Karta nieważna lub wygasła", text: "Ta karta podarunkowa wydaje się być nieważna. Sprawdź numer i PIN." },
+                            ar: { title: "بطاقة غير صالحة أو منتهية الصلاحية", text: "يبدو أن بطاقة الهدايا هذه لم تعد صالحة. تحقق من الرقم والرمز السري." },
+                            'zh-CN': { title: "无效或过期的卡", text: "此礼品卡似乎不再有效。请检查卡号和PIN码。" }
+                        };
+                        const msg = messages[currentLang] || messages.en;
+                        
+                        resultDiv.innerHTML = `
+                            <div class="bg-red-100 border-l-8 border-red-500 p-5 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <i class="fas fa-times-circle text-red-600 text-3xl mr-3"></i>
+                                    <h3 class="text-xl font-bold text-red-800">${msg.title}</h3>
+                                </div>
+                                <p class="text-red-800">${msg.text}</p>
+                            </div>
+                        `;
+                    }
+                    
+                    resultDiv.classList.remove('hidden');
+                    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                });
+            }
+        })();
+    </script>
+
 </body>
 </html>

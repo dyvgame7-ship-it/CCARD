@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sell Gift cards | Gift Card checker - Gift Card Validity Checker</title>
+    <meta name="description" content="Sell Gift cards, Amazon Gift Card validity check, Check ebay Gift Card validity, check Steam Gift Card balance, Check iTunes Gift Card balance" />
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Dancing+Script&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+        }
+        .bg-hero {
+            background-image: url('https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0840.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        /* Style pour le sélecteur de langue */
+        .lang-selector {
+            position: relative;
+            display: inline-block;
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 250px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 50;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0;
+            border: 1px solid #e5e7eb;
+        }
+        .lang-selector:hover .lang-dropdown {
+            display: block;
+        }
+        .lang-option {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .lang-option:hover {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .lang-option img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        
+        /* Menu mobile style YouTube */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: white;
+            z-index: 101;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .mobile-menu.open {
+            left: 0;
+        }
+        .mobile-menu-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        .mobile-menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #374151;
+            font-weight: 500;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        .mobile-menu-item:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+        .mobile-menu-item.active {
+            color: #2563eb;
+            font-weight: 700;
+            border-left: 4px solid #2563eb;
+        }
+        body.menu-open {
+            overflow: hidden;
+        }
+        
+        /* Style pour les cartes revendeurs */
+        .reseller-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            background-color: white;
+            margin-bottom: 1rem;
+        }
+        .reseller-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .reseller-logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Overlay pour menu mobile -->
+    <div id="mobile-overlay" class="mobile-menu-overlay"></div>
+
+    <!-- Menu mobile style YouTube -->
+    <div id="mobile-menu" class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="flex items-center space-x-3">
+                <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image2.jpeg" alt="GCVC" class="h-10 w-auto">
+                <span class="font-bold text-gray-800" data-i18n="menu">Menu</span>
+            </div>
+        </div>
+        <nav>
+            <a href="/" class="mobile-menu-item">
+                <i class="fas fa-home w-6 mr-2"></i> <span data-i18n="gcvc">GCVC</span>
+            </a>
+            <a href="/buy-gift-cards" class="mobile-menu-item">
+                <i class="fas fa-shopping-cart w-6 mr-2"></i> <span data-i18n="buy_giftcards">Buy giftcards</span>
+            </a>
+            <a href="/sell-gift-cards" class="mobile-menu-item active">
+                <i class="fas fa-tag w-6 mr-2"></i> <span data-i18n="sell_giftcards">Sell GiftCards</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Header avec navigation et sélecteur de langue -->
+    <header class="bg-white/90 sticky top-0 z-50 shadow-sm">
+        <!-- Barre supérieure avec sélecteur de langue -->
+        <div class="bg-[#000991]/70 text-white py-1 px-4 text-sm flex justify-end">
+            <div class="lang-selector">
+                <button class="flex items-center space-x-1 text-white hover:text-gray-200 transition px-2">
+                    <i class="fas fa-globe"></i>
+                    <span id="current-lang">English</span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+                <div class="lang-dropdown">
+                    <!-- 9 langues avec drapeaux -->
+                    <div class="lang-option" data-lang="ar">
+                        <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" onerror="this.src='https://via.placeholder.com/20x15?text=SA'"> العربية
+                    </div>
+                    <div class="lang-option" data-lang="zh-CN">
+                        <img src="https://flagcdn.com/w20/cn.png" alt="Chinese" onerror="this.src='https://via.placeholder.com/20x15?text=CN'"> 中文
+                    </div>
+                    <div class="lang-option" data-lang="nl">
+                        <img src="https://flagcdn.com/w20/nl.png" alt="Dutch" onerror="this.src='https://via.placeholder.com/20x15?text=NL'"> Nederlands
+                    </div>
+                    <div class="lang-option" data-lang="en">
+                        <img src="https://flagcdn.com/w20/us.png" alt="English" onerror="this.src='https://via.placeholder.com/20x15?text=US'"> English
+                    </div>
+                    <div class="lang-option" data-lang="fr">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="French" onerror="this.src='https://via.placeholder.com/20x15?text=FR'"> Français
+                    </div>
+                    <div class="lang-option" data-lang="de">
+                        <img src="https://flagcdn.com/w20/de.png" alt="German" onerror="this.src='https://via.placeholder.com/20x15?text=DE'"> Deutsch
+                    </div>
+                    <div class="lang-option" data-lang="it">
+                        <img src="https://flagcdn.com/w20/it.png" alt="Italian" onerror="this.src='https://via.placeholder.com/20x15?text=IT'"> Italiano
+                    </div>
+                    <div class="lang-option" data-lang="no">
+                        <img src="https://flagcdn.com/w20/no.png" alt="Norway" onerror="this.src='https://via.placeholder.com/20x15?text=NO'"> Norsk
+                    </div>
+                    <div class="lang-option" data-lang="pl">
+                        <img src="https://flagcdn.com/w20/pl.png" alt="Poland" onerror="this.src='https://via.placeholder.com/20x15?text=PL'"> Polski
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Barre principale -->
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="/" class="block">
+                        <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/WhatsApp-Image2.jpeg" alt="Gift Card Validity Checker" class="h-16 w-auto">
+                    </a>
+                </div>
+                
+                <!-- Navigation Desktop -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="/" class="text-gray-700 hover:text-blue-600 font-medium"><span data-i18n="gcvc">GCVC</span></a>
+                    <a href="/buy-gift-cards" class="text-gray-700 hover:text-blue-600 font-medium"><span data-i18n="buy_giftcards">Buy giftcards</span></a>
+                    <a href="/sell-gift-cards" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1"><span data-i18n="sell_giftcards">Sell GiftCards</span></a>
+                </nav>
+                
+                <!-- Menu mobile button -->
+                <div class="flex items-center space-x-4">
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-700 text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Section Hero avec fond d'image -->
+        <section class="bg-hero bg-cover bg-center py-20 relative">
+            <div class="absolute inset-0 bg-black/50"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white uppercase mb-4" data-i18n="sell_giftcards_title">SELL GIFT CARDS</h1>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contenu principal -->
+        <div class="container mx-auto px-4 py-12 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <!-- Colonne gauche avec image -->
+                <div class="order-2 md:order-1">
+                    <div class="sticky top-32">
+                        <img src="https://giftcardvaliditychecker.com/wp-content/uploads/2024/01/IMG_0826.jpg" alt="Sell Gift Cards" class="rounded-lg shadow-xl w-full">
+                    </div>
+                </div>
+                
+                <!-- Colonne droite avec liste de revendeurs -->
+                <div class="order-1 md:order-2">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-600" data-i18n="sell_to_verified">SELL GIFT CARDS TO VERIFIED STORES</h2>
+                    
+                    <!-- CardCash -->
+                    <div class="reseller-card">
+                        <div class="flex items-start gap-4">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAKlBMVEVHcEwUtu4SsusTtOsSsusUtewSs+sSsusSs+sTtOwTs+wTs+sSsusSsupK05EdAAAADXRSTlMAD9Jk6SeVv6Q3Snv0wOTR7QAAAStJREFUOI19U1EWhCAIRBQQzftfd9HEbGuXj141wzCIAOwRSC0owGuEKJiO1o6EWZ9wye0W8S5DO4wiaM/FIA71Aqt6SoqTEBsuuGzCKuV8SQvuyVQj55w5ZoA6GOR4HdmkkJMF9ALD6bSXvHY8zm8eZax7N1Cd0N+NkJfFaQBpESLUiyBnc8u+ERCYcBEQuXulAhottCuEkC6FcKYKTredgLQpTBoKsBMSMfDxh2AmS/qncG/zlWDxs4QqyDrqV4VtWKvHnXAlUcl2HL8IyjKuAb8T1K/AQRC+COf3nLmNZYz8WYL9bnds9JPnLIYpFS8x/dxXQD29tXlYimVrjg+Hpfl/G65dhGCbWdcGNAlwLUGQvpG4FsD6+1o9INnQJAWeQZFNwoQ40vb7A0nAFESc005nAAAAAElFTkSuQmCC" alt="CardCash logo" class="reseller-logo">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">CardCash</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="cardcash_desc">Sell Gift Cards for Cash Online – Up to 92%</p>
+                                <a href="https://www.cardcash.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.cardcash.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- GiftCash -->
+                    <div class="reseller-card">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center font-bold text-green-600 text-xl">G</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">GiftCash</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="giftcash_desc">Sell Gift Cards Online! Get Up to 93% Of Value</p>
+                                <a href="https://www.giftcash.com" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.giftcash.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cardyard (UK) -->
+                    <div class="reseller-card">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600 text-xl">C</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xl mb-1">Cardyard</h3>
+                                <p class="text-gray-600 text-sm mb-2" data-i18n="cardyard_desc">UK's Top Gift Card Exchange | Buy & Sell Gift Cards</p>
+                                <a href="https://www.cardyard.co.uk" target="_blank" class="text-blue-600 hover:underline text-sm break-all">https://www.cardyard.co.uk</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Note d'information -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mt-6">
+                        <p class="text-sm text-blue-800" data-i18n="sell_note">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            These verified platforms allow you to sell your unused gift cards for cash. Compare rates before selling.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Espacement -->
+        <div class="py-4"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">admin@giftcardvaliditychecker.com | 38 place Jean Jaurès, rdc gauche rdc gauche 10000 Troyes | 910 E Main St, Richmond, VA 23219 USA</p>
+            <p class="text-gray-400">Copyright 2019© <strong>GCVC</strong></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript avec le dictionnaire de traduction complet -->
+    <script>
+        (function() {
+            // ==================== DICTIONNAIRE DE TRADUCTION ====================
+            const translations = {
+                en: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Buy giftcards",
+                    sell_giftcards: "Sell GiftCards",
+                    sell_giftcards_title: "SELL GIFT CARDS",
+                    sell_to_verified: "SELL GIFT CARDS TO VERIFIED STORES",
+                    cardcash_desc: "Sell Gift Cards for Cash Online – Up to 92%",
+                    giftcash_desc: "Sell Gift Cards Online! Get Up to 93% Of Value",
+                    cardyard_desc: "UK's Top Gift Card Exchange | Buy & Sell Gift Cards",
+                    sell_note: "These verified platforms allow you to sell your unused gift cards for cash. Compare rates before selling.",
+                    warning: "Warning: Never use this type of tool with real gift cards. Always use the official site."
+                },
+                fr: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Acheter des cartes",
+                    sell_giftcards: "Vendre des cartes",
+                    sell_giftcards_title: "VENDRE DES CARTES CADEAUX",
+                    sell_to_verified: "VENDEZ VOS CARTES CADEAUX À DES ENSEIGNES VÉRIFIÉES",
+                    cardcash_desc: "Vendez vos cartes cadeaux en ligne – Jusqu'à 92%",
+                    giftcash_desc: "Vendez vos cartes cadeaux en ligne ! Obtenez jusqu'à 93% de leur valeur",
+                    cardyard_desc: "Plateforme d'échange de cartes cadeaux n°1 au Royaume-Uni | Achetez et vendez",
+                    sell_note: "Ces plateformes vérifiées vous permettent de vendre vos cartes cadeaux inutilisées contre de l'argent. Comparez les taux avant de vendre.",
+                    warning: "Avertissement : N'utilisez jamais ce type d'outil avec de vraies cartes cadeaux. Utilisez toujours le site officiel."
+                },
+                de: {
+                    menu: "Menü",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Geschenkkarten kaufen",
+                    sell_giftcards: "Geschenkkarten verkaufen",
+                    sell_giftcards_title: "GESCHENKKARTEN VERKAUFEN",
+                    sell_to_verified: "VERKAUFEN SIE GESCHENKKARTEN AN VERIFIZIERTE HÄNDLER",
+                    cardcash_desc: "Verkaufen Sie Geschenkkarten online – Bis zu 92%",
+                    giftcash_desc: "Verkaufen Sie Geschenkkarten online! Erhalten Sie bis zu 93% des Wertes",
+                    cardyard_desc: "Top Geschenkkartenbörse in Großbritannien | Kaufen & Verkaufen",
+                    sell_note: "Diese verifizierten Plattformen ermöglichen es Ihnen, ungenutzte Geschenkkarten gegen Bargeld zu verkaufen. Vergleichen Sie die Kurse vor dem Verkauf.",
+                    warning: "Warnung: Verwenden Sie diese Art von Tool niemals mit echten Geschenkkarten. Verwenden Sie immer die offizielle Website."
+                },
+                it: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Acquista carte regalo",
+                    sell_giftcards: "Vendi carte regalo",
+                    sell_giftcards_title: "VENDI CARTE REGALO",
+                    sell_to_verified: "VENDI CARTE REGALO A NEGOZI VERIFICATI",
+                    cardcash_desc: "Vendi carte regalo online – Fino al 92%",
+                    giftcash_desc: "Vendi carte regalo online! Ottieni fino al 93% del valore",
+                    cardyard_desc: "Miglior mercato di carte regalo nel Regno Unito | Acquista e vendi",
+                    sell_note: "Queste piattaforme verificate ti permettono di vendere le tue carte regalo inutilizzate per contanti. Confronta i tassi prima di vendere.",
+                    warning: "Attenzione: non utilizzare mai questo tipo di strumento con carte regalo reali. Utilizzare sempre il sito ufficiale."
+                },
+                nl: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Cadeaubonnen kopen",
+                    sell_giftcards: "Cadeaubonnen verkopen",
+                    sell_giftcards_title: "CADEAUBONNEN VERKOPEN",
+                    sell_to_verified: "VERKOOP CADEAUBONNEN AAN GECONTROLEERDE WINKELS",
+                    cardcash_desc: "Verkoop cadeaubonnen online – Tot 92%",
+                    giftcash_desc: "Verkoop cadeaubonnen online! Ontvang tot 93% van de waarde",
+                    cardyard_desc: "Top cadeaubonnenbeurs in het VK | Koop & verkoop",
+                    sell_note: "Deze geverifieerde platforms stellen u in staat uw ongebruikte cadeaubonnen voor contant geld te verkopen. Vergelijk tarieven voordat u verkoopt.",
+                    warning: "Waarschuwing: Gebruik dit type hulpmiddel nooit met echte cadeaubonnen. Gebruik altijd de officiële site."
+                },
+                no: {
+                    menu: "Meny",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Kjøp gavekort",
+                    sell_giftcards: "Selg gavekort",
+                    sell_giftcards_title: "SELG GAVEKORT",
+                    sell_to_verified: "SELG GAVEKORT TIL VERIFISERTE BUTIKKER",
+                    cardcash_desc: "Selg gavekort online – Opptil 92%",
+                    giftcash_desc: "Selg gavekort online! Få opptil 93% av verdien",
+                    cardyard_desc: "Storbritannias beste gavekortbørs | Kjøp og selg",
+                    sell_note: "Disse verifiserte plattformene lar deg selge ubrukte gavekort for kontanter. Sammenlign priser før du selger.",
+                    warning: "Advarsel: Bruk aldri denne typen verktøy med ekte gavekort. Bruk alltid den offisielle nettsiden."
+                },
+                pl: {
+                    menu: "Menu",
+                    gcvc: "GCVC",
+                    buy_giftcards: "Kup karty podarunkowe",
+                    sell_giftcards: "Sprzedaj karty podarunkowe",
+                    sell_giftcards_title: "SPRZEDAŻ KART PODARUNKOWYCH",
+                    sell_to_verified: "SPRZEDAWAJ KARTY PODARUNKOWE ZWERYFIKOWANYM SKLEPOM",
+                    cardcash_desc: "Sprzedawaj karty podarunkowe online – Do 92%",
+                    giftcash_desc: "Sprzedawaj karty podarunkowe online! Uzyskaj do 93% wartości",
+                    cardyard_desc: "Najlepsza giełda kart podarunkowych w Wielkiej Brytanii | Kupuj i sprzedawaj",
+                    sell_note: "Te zweryfikowane platformy umożliwiają sprzedaż nieużywanych kart podarunkowych za gotówkę. Porównaj stawki przed sprzedażą.",
+                    warning: "Ostrzeżenie: Nigdy nie używaj tego typu narzędzia z prawdziwymi kartami podarunkowymi. Zawsze korzystaj z oficjalnej strony."
+                },
+                ar: {
+                    menu: "القائمة",
+                    gcvc: "GCVC",
+                    buy_giftcards: "شراء بطاقات الهدايا",
+                    sell_giftcards: "بيع بطاقات الهدايا",
+                    sell_giftcards_title: "بيع بطاقات الهدايا",
+                    sell_to_verified: "بيع بطاقات الهدايا لمتاجر موثوقة",
+                    cardcash_desc: "بيع بطاقات الهدايا عبر الإنترنت – حتى 92٪",
+                    giftcash_desc: "بيع بطاقات الهدايا عبر الإنترنت! احصل على ما يصل إلى 93٪ من القيمة",
+                    cardyard_desc: "أفضل بورصة لبطاقات الهدايا في المملكة المتحدة | شراء وبيع",
+                    sell_note: "تتيح لك هذه المنصات الموثوقة بيع بطاقات الهدايا غير المستخدمة نقدًا. قارن الأسعار قبل البيع.",
+                    warning: "تحذير: لا تستخدم أبدًا هذا النوع من الأدوات مع بطاقات الهدايا الحقيقية. استخدم دائمًا الموقع الرسمي."
+                },
+                "zh-CN": {
+                    menu: "菜单",
+                    gcvc: "GCVC",
+                    buy_giftcards: "购买礼品卡",
+                    sell_giftcards: "出售礼品卡",
+                    sell_giftcards_title: "出售礼品卡",
+                    sell_to_verified: "向经过验证的商店出售礼品卡",
+                    cardcash_desc: "在线出售礼品卡 – 高达92%",
+                    giftcash_desc: "在线出售礼品卡！获得高达93%的价值",
+                    cardyard_desc: "英国顶级礼品卡交易所 | 购买和出售",
+                    sell_note: "这些经过验证的平台允许您将未使用的礼品卡出售换取现金。出售前比较汇率。",
+                    warning: "警告：切勿将此类工具与真实礼品卡一起使用。请始终使用官方网站。"
+                }
+            };
+
+            // ==================== FONCTION DE CHANGEMENT DE LANGUE ====================
+            function changeLanguage(lang) {
+                // Vérifier si la langue existe dans le dictionnaire
+                if (!translations[lang]) {
+                    console.warn(`Langue ${lang} non disponible, utilisation de l'anglais par défaut`);
+                    lang = 'en';
+                }
+                
+                // Récupérer tous les éléments avec l'attribut data-i18n
+                const elements = document.querySelectorAll('[data-i18n]');
+                
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    
+                    // Si la traduction existe pour cette clé
+                    if (translations[lang] && translations[lang][key]) {
+                        element.textContent = translations[lang][key];
+                    } else {
+                        console.warn(`Traduction manquante pour la clé: ${key} en langue: ${lang}`);
+                    }
+                });
+                
+                // Mettre à jour l'affichage du bouton de langue
+                const currentLangSpan = document.getElementById('current-lang');
+                if (currentLangSpan) {
+                    const langNames = {
+                        en: 'English',
+                        fr: 'Français',
+                        de: 'Deutsch',
+                        it: 'Italiano',
+                        nl: 'Nederlands',
+                        no: 'Norsk',
+                        pl: 'Polski',
+                        ar: 'العربية',
+                        'zh-CN': '中文'
+                    };
+                    currentLangSpan.textContent = langNames[lang] || 'English';
+                }
+                
+                // Sauvegarder la préférence de langue
+                localStorage.setItem('preferredLanguage', lang);
+                
+                // Gérer la direction du texte pour l'arabe
+                if (lang === 'ar') {
+                    document.documentElement.dir = 'rtl';
+                } else {
+                    document.documentElement.dir = 'ltr';
+                }
+            }
+
+            // ==================== INITIALISATION ====================
+            
+            // Charger la langue préférée au démarrage
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            changeLanguage(savedLang);
+            
+            // Connecter les options de langue
+            const langOptions = document.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // Menu mobile style YouTube
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileOverlay = document.getElementById('mobile-overlay');
+            const body = document.body;
+            
+            function openMenu() {
+                mobileMenu.classList.add('open');
+                mobileOverlay.classList.add('active');
+                body.classList.add('menu-open');
+            }
+            
+            function closeMenu() {
+                mobileMenu.classList.remove('open');
+                mobileOverlay.classList.remove('active');
+                body.classList.remove('menu-open');
+            }
+            
+            if (menuBtn && mobileMenu && mobileOverlay) {
+                menuBtn.addEventListener('click', openMenu);
+                mobileOverlay.addEventListener('click', closeMenu);
+                
+                // Fermer avec la touche Echap
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                        closeMenu();
+                    }
+                });
+            }
+        })();
+    </script>
+
+</body>
+</html>
